@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import ConferenceForm from './ConferenceForm'
 
-export default function ConferenceList({ conferences, onRefresh, onDataChange }) {
+export default function ConferenceList({ conferences, onRefresh, onDataChange, onViewSessions }) {
   const [loading, setLoading] = useState(false)
   const [showForm, setShowForm] = useState(false)
   const [editingConference, setEditingConference] = useState(null)
@@ -115,6 +115,7 @@ export default function ConferenceList({ conferences, onRefresh, onDataChange })
                 conference={conference}
                 onEdit={handleEditConference}
                 onDelete={handleDeleteConference}
+                onViewSessions={onViewSessions}
               />
             ))}
           </div>
@@ -177,7 +178,7 @@ export default function ConferenceList({ conferences, onRefresh, onDataChange })
   )
 }
 
-function ConferenceCard({ conference, onEdit, onDelete }) {
+function ConferenceCard({ conference, onEdit, onDelete, onViewSessions }) {
   const handleKeyDown = (event, action) => {
     if (event.key === 'Enter' || event.key === ' ') {
       event.preventDefault()
@@ -221,8 +222,8 @@ function ConferenceCard({ conference, onEdit, onDelete }) {
       
       <div className="flex justify-between items-center">
         <button 
-          onClick={() => onEdit(conference.id)}
-          onKeyDown={(e) => handleKeyDown(e, () => onEdit(conference.id))}
+          onClick={() => onViewSessions?.(conference.id)}
+          onKeyDown={(e) => handleKeyDown(e, () => onViewSessions?.(conference.id))}
           className="inline-flex items-center px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 transition-colors"
           aria-label={`View sessions for ${conference.name}`}
         >
@@ -231,14 +232,24 @@ function ConferenceCard({ conference, onEdit, onDelete }) {
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
           </svg>
         </button>
-        <button
-          onClick={() => onDelete(conference.id)}
-          onKeyDown={(e) => handleKeyDown(e, () => onDelete(conference.id))}
-          className="text-sm text-red-600 hover:text-red-800 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-50 transition-colors p-1 rounded"
-          aria-label={`Delete ${conference.name}`}
-        >
-          Delete
-        </button>
+        <div className="flex space-x-2">
+          <button
+            onClick={() => onEdit(conference.id)}
+            onKeyDown={(e) => handleKeyDown(e, () => onEdit(conference.id))}
+            className="text-sm px-3 py-1 bg-gray-100 text-gray-700 rounded hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-opacity-50"
+            aria-label={`Edit ${conference.name}`}
+          >
+            Edit
+          </button>
+          <button
+            onClick={() => onDelete(conference.id)}
+            onKeyDown={(e) => handleKeyDown(e, () => onDelete(conference.id))}
+            className="text-sm px-3 py-1 bg-red-100 text-red-700 rounded hover:bg-red-200 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-50"
+            aria-label={`Delete ${conference.name}`}
+          >
+            Delete
+          </button>
+        </div>
       </div>
     </div>
   )

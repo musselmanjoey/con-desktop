@@ -5,8 +5,8 @@
   "main": "src/main/main.js",
   "homepage": "https://github.com/musselmanjoey/con-desktop",
   "scripts": {
-    "dev": "concurrently \"npm run dev:renderer\" \"wait-on http-get://localhost:3004 && cross-env RENDERER_PORT=3004 npm run dev:electron\"",
-    "dev:renderer": "next dev src/renderer -p 3004",
+    "dev": "concurrently \"npm run dev:renderer\" \"wait-on http-get://localhost:3006 && cross-env RENDERER_PORT=3006 npm run dev:electron\"",
+    "dev:renderer": "next dev src/renderer -p 3006",
     "dev:electron": "cross-env NODE_ENV=development electron .",
     "build": "npm run build:renderer && npm run build:electron",
     "build:renderer": "next build src/renderer",

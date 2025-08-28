@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import Layout from '../components/Layout'
 import ConferenceList from '../components/ConferenceList'
+import SessionList from '../components/SessionList'
 import WelcomeScreen from '../components/WelcomeScreen'
 
 export default function Home() {
@@ -8,6 +9,8 @@ export default function Home() {
   const [websiteRepoPath, setWebsiteRepoPath] = useState('')
   const [loading, setLoading] = useState(true)
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false)
+  const [currentView, setCurrentView] = useState('conferences') // 'conferences' or 'sessions'
+  const [selectedConferenceId, setSelectedConferenceId] = useState(null)
 
   useEffect(() => {
     loadInitialData()
@@ -64,6 +67,18 @@ export default function Home() {
     setHasUnsavedChanges(true)
   }
 
+  const handleViewSessions = (conferenceId) => {
+    setSelectedConferenceId(conferenceId)
+    setCurrentView('sessions')
+  }
+
+  const handleBackToConferences = () => {
+    setCurrentView('conferences')
+    setSelectedConferenceId(null)
+    // Refresh conference data when returning
+    loadInitialData()
+  }
+
   if (loading) {
     return (
       <Layout>
@@ -78,6 +93,12 @@ export default function Home() {
     <Layout hasUnsavedChanges={hasUnsavedChanges} onSave={handleSaveChanges}>
       {!websiteRepoPath ? (
         <WelcomeScreen onRepoSetup={handleRepoSetup} />
+      ) : currentView === 'sessions' && selectedConferenceId ? (
+        <SessionList 
+          conferenceId={selectedConferenceId}
+          onBack={handleBackToConferences}
+          onDataChange={handleDataChange}
+        />
       ) : (
         <ConferenceList 
           conferences={conferences}
@@ -86,6 +107,7 @@ export default function Home() {
             handleDataChange()
           }}
           onDataChange={handleDataChange}
+          onViewSessions={handleViewSessions}
         />
       )}
     </Layout>
