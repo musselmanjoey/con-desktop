@@ -1,0 +1,266 @@
+# Con Desktop
+
+Desktop Electron application for AI conference content research and management. This app serves as the content management system for the Con project ecosystem, allowing users to research conferences, manage session data, and sync with the static website.
+
+## 🚀 Getting Started
+
+```bash
+# Install dependencies
+npm install
+
+# Start development mode (renderer + electron)
+npm run dev
+
+# Start only the renderer (Next.js) for debugging
+npm run dev:renderer
+```
+
+## 📦 Available Scripts
+
+```bash
+npm run dev              # Start full development environment
+npm run dev:renderer     # Start Next.js renderer only
+npm run dev:electron     # Start Electron main process only
+npm run build            # Build both renderer and main process
+npm run build:renderer   # Build Next.js renderer
+npm run build:electron   # Build Electron app for distribution
+npm run dist             # Create distributable packages
+npm run pack             # Package app without creating installer
+npm run start            # Start built Electron app
+npm run lint             # Run ESLint on renderer code
+npm run test             # Run Jest tests
+npm run test:watch       # Run tests in watch mode
+npm run test:coverage    # Generate test coverage report
+```
+
+## 🏗️ Project Architecture
+
+```
+con-desktop/
+├── src/
+│   ├── main/                    # Electron main process
+│   │   ├── main.js              # Main Electron entry point
+│   │   ├── preload.js           # Secure IPC bridge
+│   │   └── handlers/            # IPC request handlers
+│   └── renderer/                # Next.js renderer process
+│       ├── pages/               # Next.js pages
+│       ├── components/          # React components
+│       ├── styles/              # CSS and styling
+│       └── utils/               # Frontend utilities
+├── dist/                        # Built application packages
+└── node_modules/
+```
+
+## 🔄 Data Flow & Architecture
+
+### Core Workflow
+1. **Conference Research**: User discovers conferences and sessions
+2. **Data Entry**: Manual or semi-automated data collection
+3. **Validation**: Built-in data validation and formatting
+4. **Git Sync**: Commits and pushes to con-website repository
+5. **Auto-Deploy**: Website rebuilds automatically with new data
+
+### IPC Communication
+- **Main Process**: Handles file system, Git operations, external APIs
+- **Renderer Process**: React UI for user interactions
+- **Preload Script**: Secure bridge following Electron security best practices
+
+## 🔧 Key Features
+
+### Conference Management
+- Create and edit conference metadata
+- Bulk import from conference websites
+- Data validation and formatting
+- Duplicate detection
+
+### Session Management  
+- Add sessions with YouTube links
+- Extract video metadata automatically
+- Generate NotebookLM-optimized summaries
+- Batch operations for efficiency
+
+### Git Integration
+- Clone con-website repository
+- Track changes to data files
+- One-click commit and push
+- Conflict resolution assistance
+
+### Data Validation
+- Schema validation for conferences and sessions
+- URL validation for YouTube links
+- Duplicate session detection
+- Data completeness checks
+
+## 🧪 Testing Strategy
+
+### Unit Testing (Jest + React Testing Library)
+```bash
+# Run all tests
+npm test
+
+# Watch mode for development
+npm run test:watch
+
+# Coverage report
+npm run test:coverage
+```
+
+### Integration Testing
+- IPC communication between processes
+- File system operations
+- Git workflow testing
+- Data persistence validation
+
+## 📊 Data Schema Integration
+
+### Conference Object
+```json
+{
+  "id": "conference-slug",
+  "name": "Conference Name",
+  "slug": "conference-slug", 
+  "description": "Brief description",
+  "date": "2024-06-15",
+  "location": "City, State",
+  "sessionCount": 3,
+  "websiteUrl": "https://conference.example.com",
+  "tags": ["ai", "machine-learning"]
+}
+```
+
+### Session Object
+```json
+{
+  "id": "session-slug",
+  "title": "Session Title",
+  "speaker": "Speaker Name",
+  "youtubeUrl": "https://youtube.com/watch?v=VIDEO_ID",
+  "summary": "Detailed session summary optimized for NotebookLM...",
+  "duration": "45 minutes",
+  "tags": ["keynote", "technical"],
+  "transcript": "Optional full transcript",
+  "extractedAt": "2024-08-28T00:00:00Z"
+}
+```
+
+## 🔐 Security & Best Practices
+
+### Electron Security
+- **Context Isolation**: Enabled for all renderer processes
+- **Node Integration**: Disabled in renderer for security
+- **Preload Scripts**: Secure API exposure via contextBridge
+- **Content Security Policy**: Strict CSP headers
+
+### Data Security
+- Local data storage only (no cloud dependencies)
+- Git credentials handled securely
+- Input validation on all user data
+- Safe file system operations
+
+## 🌐 Integration with Con Website
+
+### Repository Structure
+```
+con-website/                     # Target repository
+├── data/
+│   ├── conferences.json         # Generated by desktop app
+│   └── sessions/               # Session files per conference
+└── [website files...]
+```
+
+### Sync Process
+1. **Clone Setup**: Desktop app clones website repo locally
+2. **Data Updates**: User makes changes via desktop interface
+3. **File Generation**: App updates JSON files in repo
+4. **Git Operations**: Automated commit and push
+5. **Deployment**: Website auto-deploys from main branch
+
+## 🔧 Development Workflow
+
+### With GitHub Copilot
+This project is optimized for GitHub Copilot assistance:
+
+1. **Clear separation**: Main/renderer processes clearly defined
+2. **Typed IPC**: Well-documented IPC communication patterns
+3. **Component structure**: Consistent React component patterns
+4. **Security patterns**: Following Electron security best practices
+
+### Adding New Features
+1. **Design IPC contract**: Define data flow between processes
+2. **Implement main process handler**: Add business logic
+3. **Create renderer UI**: Build React components
+4. **Add tests**: Unit and integration test coverage
+5. **Update documentation**: Keep README and comments current
+
+## 📋 Configuration
+
+### Settings Storage
+Uses `electron-store` for persistent configuration:
+
+```javascript
+// Example configuration
+{
+  "websiteRepoPath": "/path/to/con-website",
+  "gitCredentials": "encrypted-credentials",
+  "defaultConferenceTemplate": { ... },
+  "autoSync": true,
+  "notificationPreferences": { ... }
+}
+```
+
+## 🚀 Distribution
+
+### Build Targets
+- **Windows**: NSIS installer
+- **macOS**: DMG package  
+- **Linux**: AppImage
+
+### Build Process
+```bash
+# Build for current platform
+npm run dist
+
+# Build for specific platform
+npm run dist -- --win
+npm run dist -- --mac
+npm run dist -- --linux
+```
+
+## 🔗 Related Repositories
+
+- [con-website](https://github.com/musselmanjoey/con-website) - Static Next.js website for content display
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Implement changes with tests
+4. Test in both dev and built modes
+5. Submit a pull request
+
+## 📄 License
+
+This project is part of the Con ecosystem for AI conference content curation.
+
+---
+
+## Development Notes
+
+### Architecture Decisions
+
+**Electron + Next.js Hybrid**
+- Leverages web technologies for rapid UI development
+- Native desktop integration for file system and Git operations
+- Security-first approach with process isolation
+
+**JSON Data Storage**
+- Simple, version-controllable format
+- Easy integration with static site generation
+- Human-readable for debugging and manual editing
+
+**Git-based Workflow**
+- Version control for all data changes  
+- Automated deployment pipeline
+- Collaboration-ready for team use
+
+This architecture provides a robust foundation for conference content management while maintaining simplicity and security.

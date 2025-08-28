@@ -1,0 +1,80 @@
+{
+  "name": "con-desktop",
+  "version": "0.1.0",
+  "description": "Desktop Electron app for AI conference content research and management",
+  "main": "src/main/main.js",
+  "homepage": "https://github.com/musselmanjoey/con-desktop",
+  "scripts": {
+    "dev": "concurrently \"npm run dev:renderer\" \"wait-on http://localhost:3000 && npm run dev:electron\"",
+    "dev:renderer": "next dev src/renderer",
+    "dev:electron": "cross-env NODE_ENV=development electron .",
+    "build": "npm run build:renderer && npm run build:electron",
+    "build:renderer": "next build src/renderer && next export src/renderer",
+    "build:electron": "electron-builder",
+    "dist": "npm run build && electron-builder --publish=never",
+    "pack": "electron-builder --dir",
+    "start": "electron .",
+    "lint": "next lint src/renderer",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage"
+  },
+  "keywords": [
+    "electron",
+    "next.js",
+    "conference",
+    "ai",
+    "content-management"
+  ],
+  "author": "musselmanjoey",
+  "license": "MIT",
+  "dependencies": {
+    "electron-serve": "^1.2.0",
+    "electron-store": "^8.1.0",
+    "next": "15.5.2",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "simple-git": "^3.20.0"
+  },
+  "devDependencies": {
+    "@testing-library/jest-dom": "^6.4.2",
+    "@testing-library/react": "^14.2.1",
+    "@types/node": "^20",
+    "@types/react": "^18",
+    "@types/react-dom": "^18",
+    "concurrently": "^8.2.2",
+    "cross-env": "^7.0.3",
+    "electron": "^32.0.1",
+    "electron-builder": "^25.0.5",
+    "eslint": "^8",
+    "eslint-config-next": "15.5.2",
+    "jest": "^29.7.0",
+    "jest-environment-jsdom": "^29.7.0",
+    "postcss": "^8.4.35",
+    "tailwindcss": "^3.4.1",
+    "typescript": "^5",
+    "wait-on": "^8.0.0"
+  },
+  "build": {
+    "appId": "com.musselmanjoey.con-desktop",
+    "productName": "Con Desktop",
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "src/main/",
+      "src/renderer/out/",
+      "node_modules/",
+      "package.json"
+    ],
+    "mac": {
+      "category": "public.app-category.productivity"
+    },
+    "win": {
+      "target": "nsis"
+    },
+    "linux": {
+      "target": "AppImage"
+    }
+  }
+}
