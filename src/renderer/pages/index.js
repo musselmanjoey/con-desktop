@@ -7,6 +7,7 @@ export default function Home() {
   const [conferences, setConferences] = useState([])
   const [websiteRepoPath, setWebsiteRepoPath] = useState('')
   const [loading, setLoading] = useState(true)
+  const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false)
 
   useEffect(() => {
     loadInitialData()
@@ -36,6 +37,33 @@ export default function Home() {
     loadInitialData()
   }
 
+  const handleSaveChanges = async () => {
+    try {
+      const repoPath = await window.electronAPI?.config.get('websiteRepoPath')
+      if (!repoPath) return
+
+      // Stage all changes
+      await window.electronAPI?.git.add(repoPath, '.')
+      
+      // Create commit with timestamp
+      const timestamp = new Date().toISOString()
+      const message = `Update conference data - ${timestamp}`
+      await window.electronAPI?.git.commit(repoPath, message)
+      
+      // Reset unsaved changes flag
+      setHasUnsavedChanges(false)
+      
+      console.log('Changes saved successfully')
+    } catch (error) {
+      console.error('Failed to save changes:', error)
+      throw error
+    }
+  }
+
+  const handleDataChange = () => {
+    setHasUnsavedChanges(true)
+  }
+
   if (loading) {
     return (
       <Layout>
@@ -47,13 +75,17 @@ export default function Home() {
   }
 
   return (
-    <Layout>
+    <Layout hasUnsavedChanges={hasUnsavedChanges} onSave={handleSaveChanges}>
       {!websiteRepoPath ? (
         <WelcomeScreen onRepoSetup={handleRepoSetup} />
       ) : (
         <ConferenceList 
           conferences={conferences}
-          onRefresh={loadInitialData}
+          onRefresh={() => {
+            loadInitialData()
+            handleDataChange()
+          }}
+          onDataChange={handleDataChange}
         />
       )}
     </Layout>

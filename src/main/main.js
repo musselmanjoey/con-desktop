@@ -142,4 +142,6 @@ app.on('activate', () => {
   }
 })
 
-// IPC handlers will be added here as features are implemented
+// Load IPC handlers
+require('./handlers')
+require('./git-handlers')

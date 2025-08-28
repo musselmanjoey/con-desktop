@@ -19,7 +19,12 @@ contextBridge.exposeInMainWorld('electronAPI', {
     status: (repoPath) => ipcRenderer.invoke('git-status', repoPath),
     add: (repoPath, files) => ipcRenderer.invoke('git-add', repoPath, files),
     commit: (repoPath, message) => ipcRenderer.invoke('git-commit', repoPath, message),
-    push: (repoPath, branch) => ipcRenderer.invoke('git-push', repoPath, branch)
+    push: (repoPath, branch) => ipcRenderer.invoke('git-push', repoPath, branch),
+    listBranches: (repoPath) => ipcRenderer.invoke('git-list-branches', repoPath),
+    createBranch: (repoPath, branchName, fromBranch) => ipcRenderer.invoke('git-create-branch', repoPath, branchName, fromBranch),
+    switchBranch: (repoPath, branchName) => ipcRenderer.invoke('git-switch-branch', repoPath, branchName),
+    getCurrentBranch: (repoPath) => ipcRenderer.invoke('git-get-current-branch', repoPath),
+    hasUncommittedChanges: (repoPath) => ipcRenderer.invoke('git-has-uncommitted-changes', repoPath)
   },
 
   // File system operations
