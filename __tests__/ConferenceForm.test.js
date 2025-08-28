@@ -53,11 +53,11 @@ describe('ConferenceForm', () => {
 
     // Check for modal overlay styling by finding the fixed inset div
     const modalContainer = document.querySelector('.fixed.inset-0')
-    expect(modalContainer).toHaveClass('fixed', 'inset-0', 'bg-gray-600', 'bg-opacity-50')
+    expect(modalContainer).toHaveClass('fixed', 'inset-0', 'bg-gray-600', 'bg-opacity-75')
     
-    // Check for modal content styling
-    const modalContent = document.querySelector('.relative.top-8')
-    expect(modalContent).toHaveClass('relative', 'bg-white', 'rounded-md')
+    // Check for modal content styling with new design
+    const modalContent = document.querySelector('.relative.bg-white')
+    expect(modalContent).toHaveClass('relative', 'bg-white', 'rounded-lg', 'shadow-xl')
   })
 
   it('handles cancel button click', () => {

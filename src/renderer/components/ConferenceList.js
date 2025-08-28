@@ -178,8 +178,15 @@ export default function ConferenceList({ conferences, onRefresh, onDataChange })
 }
 
 function ConferenceCard({ conference, onEdit, onDelete }) {
+  const handleKeyDown = (event, action) => {
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault()
+      action()
+    }
+  }
+
   return (
-    <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow">
+    <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow focus-within:ring-2 focus-within:ring-blue-500 focus-within:ring-opacity-50">
       <div className="flex justify-between items-start mb-4">
         <h2 className="text-xl font-semibold text-gray-900">
           {conference.name}
@@ -215,16 +222,20 @@ function ConferenceCard({ conference, onEdit, onDelete }) {
       <div className="flex justify-between items-center">
         <button 
           onClick={() => onEdit(conference.id)}
-          className="inline-flex items-center px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-md hover:bg-blue-700 transition-colors"
+          onKeyDown={(e) => handleKeyDown(e, () => onEdit(conference.id))}
+          className="inline-flex items-center px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 transition-colors"
+          aria-label={`View sessions for ${conference.name}`}
         >
           View Sessions
-          <svg className="ml-2 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg className="ml-2 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
           </svg>
         </button>
         <button
           onClick={() => onDelete(conference.id)}
-          className="text-sm text-red-600 hover:text-red-800 transition-colors"
+          onKeyDown={(e) => handleKeyDown(e, () => onDelete(conference.id))}
+          className="text-sm text-red-600 hover:text-red-800 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-50 transition-colors p-1 rounded"
+          aria-label={`Delete ${conference.name}`}
         >
           Delete
         </button>
