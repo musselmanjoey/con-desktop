@@ -3,9 +3,10 @@ const serve = require('electron-serve')
 const path = require('path')
 const isDev = process.env.NODE_ENV === 'development'
 
-// Configure renderer process serving
+// Configure renderer process serving  
+const rendererPort = process.env.RENDERER_PORT || 3000
 const loadURL = isDev 
-  ? 'http://localhost:3000'
+  ? `http://localhost:${rendererPort}`
   : serve({ directory: path.join(__dirname, '../renderer/out') })
 
 let mainWindow
